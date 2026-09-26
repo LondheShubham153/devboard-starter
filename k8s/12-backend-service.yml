@@ -1,15 +1,15 @@
 kind: Service
 apiVersion: v1
 metadata:
-  name: postgres
+  name: backend
   namespace: devboard-ns
 
 spec:
-  clusterIP: None
   selector:
-    app: devboard-postgres
+    app: devboard-be
 
   ports:
     - protocol: TCP
-      port: 5432
-      targetPort: 5432
+      port: 8080
+      targetPort: 8080 # container port
+  

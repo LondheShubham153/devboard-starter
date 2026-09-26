@@ -7,11 +7,11 @@ metadata:
     app: devboard-postgres
 
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: devboard-postgres
-  serviceName: postgres-service
+  serviceName: postgres
   template:
     metadata:
       labels:
@@ -27,7 +27,8 @@ spec:
         volumeMounts:
         - name: pgdata
           mountPath: /var/lib/postgresql/data
-
+        - name: init
+          mountPath: /docker-entrypoint-initdb.d:ro
         env:
           - name: POSTGRES_USER
             valueFrom:
@@ -46,6 +47,12 @@ spec:
               configMapKeyRef:
                 name: devboard-configmap
                 key: POSTGRES_DB
+        readinessProbe:
+          exec:
+            command:
+              - /bin/sh
+              - -c
+              - pg_isready -U "$POSTGRES_USER" -d "$POSTGRES_DB"
       volumes:
         - name: init
           configMap:
@@ -59,8 +66,4 @@ spec:
       resources:
         requests:
           storage: 0.5Gi
-                  
-
-
-
-
+                
