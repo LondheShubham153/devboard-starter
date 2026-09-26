@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: postgres-pv-final-2
+  name: postgres-pv
 spec:
   capacity:
     storage: 1Gi
@@ -10,5 +10,5 @@ spec:
   persistentVolumeReclaimPolicy: Retain
   storageClassName: manual
   hostPath:
-    path: "/mnt/data-pg"
+    path: "/mnt/pg-data"
 

@@ -28,7 +28,7 @@ spec:
         - name: pgdata
           mountPath: /var/lib/postgresql/data
         - name: init
-          mountPath: /docker-entrypoint-initdb.d:ro
+          mountPath: /docker-entrypoint-initdb.d
         env:
           - name: POSTGRES_USER
             valueFrom:
