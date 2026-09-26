@@ -1,0 +1,60 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend-deployment
+  labels:
+    app: devboard-be
+  namespace: devboard-ns
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: devboard-be
+  template:
+    metadata:
+      labels:
+        app: devboard-be
+    spec:
+      containers:
+      - name: devboard-backend
+        image: trainwithshubham/devboard-backend:latest
+        ports:
+        - containerPort: 8080
+        env:
+          - name: PORT
+            valueFrom:
+              configMapKeyRef:
+                name: devboard-configmap
+                key: PORT
+
+          - name: POSTGRES_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: devboard-secrets
+                key: POSTGRES_PASSWORD
+
+          - name: POSTGRES_USER
+            valueFrom:
+              configMapKeyRef:
+                name: devboard-configmap
+                key: POSTGRES_USER
+
+          - name: POSTGRES_DB
+            valueFrom:
+              configMapKeyRef:
+                name: devboard-configmap
+                key: POSTGRES_DB
+
+          - name: POSTGRES_URL
+            value: postgres://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@postgres:5432/$(POSTGRES_DB)?sslmode=disable
+
+        resources:
+          requests: # minimum resource requirement
+            cpu: 10m # 0.01 Cores of CPU
+            memory: 64Mi # 67 Mb of RAM
+          
+          limits: # maximum resource requirement
+            cpu: 250m # 0.25 Cores of CPU
+            memory: 128Mi
+
+

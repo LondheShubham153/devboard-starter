@@ -1,0 +1,66 @@
+kind: StatefulSet
+apiVersion: apps/v1
+metadata:
+  name: postgres
+  namespace: devboard-ns
+  labels:
+    app: devboard-postgres
+
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: devboard-postgres
+  serviceName: postgres-service
+  template:
+    metadata:
+      labels:
+        app: devboard-postgres
+
+    spec:
+      containers:
+      - name: postgres
+        image: postgres:16-alpine
+        ports:
+        - containerPort: 5432
+          name: web
+        volumeMounts:
+        - name: pgdata
+          mountPath: /var/lib/postgresql/data
+
+        env:
+          - name: POSTGRES_USER
+            valueFrom:
+              configMapKeyRef: 
+                name: devboard-configmap
+                key: POSTGRES_USER
+
+          - name: POSTGRES_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: devboard-secrets
+                key: POSTGRES_PASSWORD
+
+          - name: POSTGRES_DB
+            valueFrom:
+              configMapKeyRef:
+                name: devboard-configmap
+                key: POSTGRES_DB
+      volumes:
+        - name: init
+          configMap:
+            name: postgres-init
+  volumeClaimTemplates:
+  - metadata:
+      name: pgdata
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      storageClassName: "manual"
+      resources:
+        requests:
+          storage: 0.5Gi
+                  
+
+
+
+

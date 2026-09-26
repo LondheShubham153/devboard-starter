@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend-deployment
+  labels:
+    app: devboard-fe
+  namespace: devboard-ns
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: devboard-fe
+  template:
+    metadata:
+      labels:
+        app: devboard-fe
+    spec:
+      containers:
+      - name: devboard-frontend
+        image: trainwithshubham/devboard-frontend:latest
+        ports:
+        - containerPort: 4173
+        resources:
+          requests: # minimum resource requirement
+            cpu: 10m # 0.01 Cores of CPU
+            memory: 64Mi # 67 Mb of RAM
+          
+          limits: # maximum resource requirement
+            cpu: 250m # 0.25 Cores of CPU
+            memory: 128Mi
+
+

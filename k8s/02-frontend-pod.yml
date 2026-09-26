@@ -1,0 +1,12 @@
+kind: Pod
+apiVersion: v1
+metadata:
+  name: devboard-frontend
+  namespace: devboard-ns
+
+spec:
+  containers:
+  - name: devboard-frontend
+    image: trainwithshubham/devboard-frontend
+    ports:
+    - containerPort: 4173
